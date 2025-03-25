@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Professional UZC EDITOR</title>
+    <link rel="icon" href="../pic/Code.png" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: #252526;
+        color: #e0e0e0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+
+      #header {
+        background: #333333;
+        padding: 8px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #1e1e1e;
+      }
+
+      #logo {
+        font-weight: bold;
+        color: #007acc;
+        margin-right: 20px;
+        font-size: 18px;
+      }
+
+      .button-container {
+        display: flex;
+        gap: 8px;
+      }
+
+      button {
+        background: #0e639c;
+        border: none;
+        padding: 6px 12px;
+        color: white;
+        border-radius: 2px;
+        cursor: pointer;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      button:hover {
+        background: #1177bb;
+      }
+
+      button.secondary {
+        background: #3a3d41;
+      }
+
+      button.secondary:hover {
+        background: #45494e;
+      }
+
+      button svg {
+        width: 14px;
+        height: 14px;
+        fill: currentColor;
+      }
+
+      #main-content {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      #editor-container {
+        flex: 1;
+        height: 100%;
+      }
+
+      #output-container {
+        height: 200px;
+        background: #000000;
+        border-top: 1px solid #333;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #output-header {
+        padding: 5px 10px;
+        background: #000000;
+        border-bottom: 1px solid #00ff00;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #00ff00;
+        font-family: "Courier New", monospace;
+      }
+
+      #output {
+        flex: 1;
+        padding: 10px;
+        font-family: "Courier New", monospace;
+        font-size: 13px;
+        color: #00ff00;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        background: #000000;
+      }
+
+      #output-header svg {
+        fill: #00ff00;
+      }
+
+      #status-bar {
+        height: 22px;
+        background: #007acc;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        font-size: 12px;
+      }
+
+      .status-item {
+        margin-right: 15px;
+      }
+
+      .success {
+        color: #4ec9b0;
+      }
+
+      .error {
+        color: #f48771;
+      }
+
+      .monaco-editor .margin {
+        background-color: #252526 !important;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+
+      .modal-content {
+        background-color: #252526;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #1e1e1e;
+        width: 300px;
+        border-radius: 4px;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .modal-title {
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      .close-modal {
+        color: #aaa;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .close-modal:hover {
+        color: #e0e0e0;
+      }
+
+      .modal-body {
+        margin-bottom: 15px;
+      }
+
+      .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      #filename-input {
+        width: 100%;
+        padding: 8px;
+        background: #1e1e1e;
+        border: 1px solid #333;
+        color: #e0e0e0;
+        border-radius: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="header">
+        <div id="logo">UZCODE COMPILER</div>
+        <div class="button-container">
+          <button onclick="runCode()">
+            <svg viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            Run (F5)
+          </button>
+          <button class="secondary" onclick="saveFile()">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
+              />
+            </svg>
+            Save
+          </button>
+        </div>
+      </div>
+
+      <div id="main-content">
+        <div id="editor-container"></div>
+      </div>
+
+      <div id="output-container">
+        <div id="output-header" style="font-weight: bold">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path
+              d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"
+            />
+          </svg>
+          TERMINAL
+        </div>
+        <div id="output"></div>
+      </div>
+
+      <div id="status-bar" style="font-weight: bold">
+        <div class="status-item">UZC</div>
+        <div class="status-item">UTF-8</div>
+        <div class="status-item">Ln 1, Col 1</div>
+      </div>
+    </div>
+
+    <!-- Save File Modal -->
+    <div id="saveModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title">Save File</div>
+          <span class="close-modal" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <input
+            type="text"
+            id="filename-input"
+            placeholder="Enter filename (e.g. mycode.uzc)"
+            value="mycode.uzc"
+          />
+        </div>
+        <div class="modal-footer">
+          <button class="secondary" onclick="closeModal()">Cancel</button>
+          <button onclick="downloadCode()">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monaco Editor CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+    <script>
+      let editor;
+      let outputElement = document.getElementById("output");
+      let saveModal = document.getElementById("saveModal");
+
+      // Configure Monaco loader
+      require.config({
+        paths: {
+          vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs",
+        },
+      });
+
+      // Initialize Monaco Editor
+      require(["vs/editor/editor.main"], function () {
+        // Register UZC language
+        monaco.languages.register({ id: "uzc" });
+
+        // Set syntax highlighting rules
+        monaco.languages.setMonarchTokensProvider("uzc", {
+          defaultToken: "",
+          tokenPostfix: ".uzc",
+
+          keywords: [
+            "let",
+            "const",
+            "function",
+            "if",
+            "elif",
+            "else",
+            "while",
+            "for",
+            "return",
+            "try",
+            "catch",
+            "class",
+            "new",
+            "this",
+            "null",
+            "undefined",
+            "true",
+            "false",
+          ],
+
+          builtinFunctions: [
+            "print",
+            "input",
+            "type",
+            "number",
+            "setTimeout",
+            "setInterval",
+            "clearTimeout",
+            "clearInterval",
+          ],
+
+          tokenizer: {
+            root: [
+              [
+                /\b(let|const|function|if|elif|else|while|for|return|try|catch|class|new|this|null|undefined|true|false)\b/,
+                "keyword",
+              ],
+              [
+                /\b(print|input|type|number|setTimeout|setInterval|clearTimeout|clearInterval)\b(?=\s*\()/,
+                "function.builtin",
+              ],
+              [/[a-zA-Z_$][\w$]*/, "identifier"],
+              [/".*?"/, "string"],
+              [/'.*?'/, "string"],
+              [/`.*?`/, "string"],
+              [/\d+/, "number"],
+              [/[{}()\[\]]/, "@brackets"],
+              [/#.*$/, "comment"],
+            ],
+          },
+        });
+
+        // Set language configuration
+        monaco.languages.setLanguageConfiguration("uzc", {
+          comments: {
+            lineComment: "#",
+          },
+          brackets: [
+            ["{", "}"],
+            ["[", "]"],
+            ["(", ")"],
+          ],
+          autoClosingPairs: [
+            { open: "{", close: "}" },
+            { open: "[", close: "]" },
+            { open: "(", close: ")" },
+            { open: '"', close: '"' },
+            { open: "'", close: "'" },
+            { open: "`", close: "`" },
+          ],
+          surroundingPairs: [
+            { open: "{", close: "}" },
+            { open: "[", close: "]" },
+            { open: "(", close: ")" },
+            { open: '"', close: '"' },
+            { open: "'", close: "'" },
+            { open: "`", close: "`" },
+          ],
+          folding: {
+            markers: {
+              start: new RegExp("^\\s*#region\\b"),
+              end: new RegExp("^\\s*#endregion\\b"),
+            },
+          },
+        });
+
+        // Register completion provider
+        monaco.languages.registerCompletionItemProvider("uzc", {
+          provideCompletionItems: function (model, position) {
+            const suggestions = [
+              {
+                label: "print",
+                kind: monaco.languages.CompletionItemKind.Function,
+                insertText: "print(${1:value})",
+                insertTextRules:
+                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: {
+                  value:
+                    '**print(value1, value2, ...)**\n\nQiymat(lar)ni chiqaradi\n\n```uzc\nprint("Salom", "Dunyo")\n```',
+                },
+              },
+              {
+                label: "input",
+                kind: monaco.languages.CompletionItemKind.Function,
+                insertText: 'input("${1:prompt}")',
+                insertTextRules:
+                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: {
+                  value:
+                    '**input(prompt)**\n\nFoydalanuvchidan kiritish so\'raydi\n\n```uzc\nlet ism = input("Ismingizni kiriting: ")\n```',
+                },
+              },
+              {
+                label: "function",
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText: "function ${1:name}(${2:params}) {\n\t${3}\n}",
+                insertTextRules:
+                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: {
+                  value:
+                    '**function name(params)**\n\nYangi funktsiya yaratadi\n\n```uzc\nfunction salom(ism) {\n\tprint("Salom", ism)\n}\n```',
+                },
+              },
+              {
+                label: "if",
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText: "if (${1:condition}) {\n\t${2}\n}",
+                insertTextRules:
+                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: {
+                  value:
+                    '**if (condition)**\n\nShartli operator\n\n```uzc\nif (yosh > 18) {\n\tprint("Katta")\n}\n```',
+                },
+              },
+              {
+                label: "for",
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText:
+                  "for (let ${1:i} = 0; ${1:i} < ${2:length}; ${1:i}++) {\n\t${3}\n}",
+                insertTextRules:
+                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: {
+                  value:
+                    "**for loop**\n\nTakrorlanish operatori\n\n```uzc\nfor (let i = 0; i < 5; i++) {\n\tprint(i)\n}\n```",
+                },
+              },
+            ];
+
+            return { suggestions: suggestions };
+          },
+        });
+
+        // Create editor instance
+        editor = monaco.editor.create(
+          document.getElementById("editor-container"),
+          {
+            value: ["# UZC Dasturlash Tili", 'print("Salom, Dunyo !!!")'].join(
+              "\n"
+            ),
+            language: "uzc",
+            theme: "vs-dark",
+            automaticLayout: true,
+            minimap: { enabled: true },
+            scrollBeyondLastLine: false,
+            fontSize: 12,
+            lineNumbers: "on",
+            roundedSelection: true,
+            scrollbar: {
+              vertical: "auto",
+              horizontal: "auto",
+            },
+            tabSize: 4,
+            wordWrap: "on",
+          }
+        );
+
+        // Update cursor position in status bar
+        editor.onDidChangeCursorPosition(function (e) {
+          const position = e.position;
+          document.querySelector(
+            ".status-item:nth-child(3)"
+          ).textContent = `Ln ${position.lineNumber}, Col ${position.column}`;
+        });
+
+        // Add keyboard shortcut for F5 to run code
+        editor.addCommand(monaco.KeyCode.F5, runCode);
+      });
+
+      // Run UZC code
+      function runCode() {
+        const code = editor.getValue();
+        outputElement.innerHTML = "";
+
+        try {
+          // Transpile UZC to JavaScript
+          let jsCode = code
+            .replace(/#(.*)/g, "//$1") // Convert comments
+            .replace(/elif/g, "else if") // Convert elif
+            .replace(/\{(.+?)\}/g, "${$1}"); // Fix template literals
+
+          // Create execution environment
+          const func = new Function(`
+                    const output = [];
+                    
+                    // UZC built-in functions
+                    const print = (...args) => {
+                        output.push(args.join(' '));
+                    };
+                    
+                    const input = (promptText) => {
+                        return window.prompt(promptText) || '';
+                    };
+                    
+                    const type = (value) => {
+                        if (value === null) return 'null';
+                        if (Array.isArray(value)) return 'array';
+                        return typeof value;
+                    };
+                    
+                    const number = (value) => parseFloat(value);
+                    
+                    // Modified async functions to capture output
+                    const setTimeout = (fn, delay) => {
+                        return window.setTimeout(() => {
+                            try {
+                                fn();
+                            } catch (e) {
+                                output.push('Xato: ' + e.message);
+                            }
+                        }, delay);
+                    };
+                    
+                    const setInterval = (fn, interval) => {
+                        return window.setInterval(() => {
+                            try {
+                                fn();
+                            } catch (e) {
+                                output.push('Xato: ' + e.message);
+                            }
+                        }, interval);
+                    };
+                    
+                    try {
+                        ${jsCode}
+                    } catch (e) {
+                        output.push('Xato: ' + e.message);
+                    }
+                    
+                    return output.join('\\n');
+                `);
+
+          // Execute and display output
+          const result = func();
+          outputElement.innerHTML = result;
+        } catch (e) {
+          outputElement.innerHTML = `<span class="error">Tushunmaydigan xato: ${e.message}</span>`;
+        }
+      }
+
+      // Show save modal
+      function saveFile() {
+        saveModal.style.display = "block";
+      }
+
+      // Close modal
+      function closeModal() {
+        saveModal.style.display = "none";
+      }
+
+      // Download code as file
+      function downloadCode() {
+        const filename =
+          document.getElementById("filename-input").value || "mycode.uzc";
+        const code = editor.getValue();
+
+        const blob = new Blob([code], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+
+        setTimeout(() => {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+          closeModal();
+        }, 0);
+      }
+
+      // Handle keyboard shortcuts
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "F5") {
+          e.preventDefault();
+          runCode();
+        }
+      });
+
+      // Close modal when clicking outside
+      window.onclick = function (event) {
+        if (event.target == saveModal) {
+          closeModal();
+        }
+      };
+    </script>
+  </body>
+</html>
