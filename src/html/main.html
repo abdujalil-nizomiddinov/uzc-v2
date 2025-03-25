@@ -302,55 +302,29 @@
           tokenPostfix: ".uzc",
 
           keywords: [
-            "let",
-            "const",
-            "function",
-            "if",
-            "elif",
-            "else",
-            "while",
-            "for",
-            "return",
-            "try",
-            "catch",
-            "class",
-            "new",
-            "this",
-            "null",
-            "undefined",
-            "true",
-            "false",
+            "let", "const", "function", "if", "elif", "else", "while", 
+            "for", "return", "try", "catch", "class", "new", "this",
+            "null", "undefined", "true", "false", "break", "continue"
           ],
 
           builtinFunctions: [
-            "print",
-            "input",
-            "type",
-            "number",
-            "setTimeout",
-            "setInterval",
-            "clearTimeout",
-            "clearInterval",
+            "print", "input", "type", "number", "length", "round", "random",
+            "setTimeout", "setInterval", "clearTimeout", "clearInterval"
           ],
 
           tokenizer: {
             root: [
-              [
-                /\b(let|const|function|if|elif|else|while|for|return|try|catch|class|new|this|null|undefined|true|false)\b/,
-                "keyword",
-              ],
-              [
-                /\b(print|input|type|number|setTimeout|setInterval|clearTimeout|clearInterval)\b(?=\s*\()/,
-                "function.builtin",
-              ],
+              [/\b(let|const|function|if|elif|else|while|for|return|try|catch|class|new|this|null|undefined|true|false|break|continue)\b/, "keyword"],
+              [/\b(print|input|type|number|length|round|random|setTimeout|setInterval|clearTimeout|clearInterval)\b(?=\s*\()/, "function.builtin"],
               [/[a-zA-Z_$][\w$]*/, "identifier"],
               [/".*?"/, "string"],
               [/'.*?'/, "string"],
               [/`.*?`/, "string"],
               [/\d+/, "number"],
+              [/[+\-*/%=<>!&|]/, "operator"],
               [/[{}()\[\]]/, "@brackets"],
-              [/#.*$/, "comment"],
-            ],
+              [/#.*$/, "comment"]
+            ]
           },
         });
 
@@ -392,66 +366,140 @@
         monaco.languages.registerCompletionItemProvider("uzc", {
           provideCompletionItems: function (model, position) {
             const suggestions = [
+              // Asosiy buyruqlar
               {
                 label: "print",
                 kind: monaco.languages.CompletionItemKind.Function,
-                insertText: "print(${1:value})",
-                insertTextRules:
-                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                insertText: 'print("${1:matn}")',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                 documentation: {
-                  value:
-                    '**print(value1, value2, ...)**\n\nQiymat(lar)ni chiqaradi\n\n```uzc\nprint("Salom", "Dunyo")\n```',
-                },
+                  value: '**print(ifoda)**\n\nMatn yoki ifodani chiqaradi\n\n```uzc\nprint("Salom Dunyo")\nprint(2 + 3)\n```'
+                }
               },
               {
                 label: "input",
                 kind: monaco.languages.CompletionItemKind.Function,
-                insertText: 'input("${1:prompt}")',
-                insertTextRules:
-                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                insertText: 'input("${1:ogohlantirish}")',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                 documentation: {
-                  value:
-                    '**input(prompt)**\n\nFoydalanuvchidan kiritish so\'raydi\n\n```uzc\nlet ism = input("Ismingizni kiriting: ")\n```',
-                },
+                  value: '**input(ogohlantirish)**\n\nFoydalanuvchidan ma\'lumot oladi\n\n```uzc\nlet ism = input("Ismingizni kiriting: ")\n```'
+                }
               },
               {
-                label: "function",
-                kind: monaco.languages.CompletionItemKind.Keyword,
-                insertText: "function ${1:name}(${2:params}) {\n\t${3}\n}",
-                insertTextRules:
-                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                label: "type",
+                kind: monaco.languages.CompletionItemKind.Function,
+                insertText: 'type(${1:qiymat})',
                 documentation: {
-                  value:
-                    '**function name(params)**\n\nYangi funktsiya yaratadi\n\n```uzc\nfunction salom(ism) {\n\tprint("Salom", ism)\n}\n```',
-                },
+                  value: '**type(qiymat)**\n\nQiymat turini qaytaradi\n\n```uzc\nlet tur = type(42)  # "number"\n```'
+                }
               },
+              
+              // Shart operatorlari
               {
                 label: "if",
                 kind: monaco.languages.CompletionItemKind.Keyword,
-                insertText: "if (${1:condition}) {\n\t${2}\n}",
-                insertTextRules:
-                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                insertText: 'if (${1:shart}) {\n\t${2}\n}',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                 documentation: {
-                  value:
-                    '**if (condition)**\n\nShartli operator\n\n```uzc\nif (yosh > 18) {\n\tprint("Katta")\n}\n```',
-                },
+                  value: '**if(shart)**\n\nShartli bajarish\n\n```uzc\nif (yosh > 18) {\n\tprint("Katta")\n}\n```'
+                }
               },
+              {
+                label: "elif",
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText: 'elif (${1:shart}) {\n\t${2}\n}',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: {
+                  value: '**elif(shart)**\n\nQo\'shimcha shart\n\n```uzc\nif (yosh > 18) {\n\tprint("Katta")\n} elif (yosh > 12) {\n\tprint("O\'rta")\n}\n```'
+                }
+              },
+              
+              // Tsikllar
               {
                 label: "for",
                 kind: monaco.languages.CompletionItemKind.Keyword,
-                insertText:
-                  "for (let ${1:i} = 0; ${1:i} < ${2:length}; ${1:i}++) {\n\t${3}\n}",
-                insertTextRules:
-                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                insertText: 'for (let ${1:i} = 0; ${1:i} < ${2:chegara}; ${1:i}++) {\n\t${3}\n}',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                 documentation: {
-                  value:
-                    "**for loop**\n\nTakrorlanish operatori\n\n```uzc\nfor (let i = 0; i < 5; i++) {\n\tprint(i)\n}\n```",
-                },
+                  value: '**for tsikli**\n\nTakrorlanish operatori\n\n```uzc\nfor (let i = 0; i < 5; i++) {\n\tprint(i)\n}\n```'
+                }
               },
+              {
+                label: "while",
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText: 'while (${1:shart}) {\n\t${2}\n}',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: {
+                  value: '**while(shart)**\n\nShart to\'g\'ri bo\'lguncha takrorlash\n\n```uzc\nlet i = 0\nwhile (i < 5) {\n\tprint(i)\n\ti++\n}\n```'
+                }
+              },
+              
+              // Funksiyalar
+              {
+                label: "function",
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText: 'function ${1:nom}(${2:parametrlar}) {\n\t${3}\n}',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: {
+                  value: '**function nom(parametrlar)**\n\nYangi funksiya yaratish\n\n```uzc\nfunction salom(ism) {\n\tprint("Salom", ism)\n}\n```'
+                }
+              },
+              {
+                label: "return",
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText: 'return ${1:qiymat}',
+                documentation: {
+                  value: '**return qiymat**\n\nFunksiyadan qiymat qaytarish\n\n```uzc\nfunction kvadrat(x) {\n\treturn x * x\n}\n```'
+                }
+              },
+              
+              // JavaScriptdan olingan qo'shimcha funksiyalar
+              {
+                label: "setTimeout",
+                kind: monaco.languages.CompletionItemKind.Function,
+                insertText: 'setTimeout(() => {\n\t${2}\n}, ${1:vaqt})',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: {
+                  value: '**setTimeout(funksiya, vaqt)**\n\nVaqt o\'tishi bilan funksiyani ishga tushirish\n\n```uzc\nsetTimeout(() => {\n\tprint("Vaqt tugadi!")\n}, 1000)\n```'
+                }
+              },
+              {
+                label: "setInterval",
+                kind: monaco.languages.CompletionItemKind.Function,
+                insertText: 'setInterval(() => {\n\t${2}\n}, ${1:vaqt})',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: {
+                  value: '**setInterval(funksiya, vaqt)**\n\nHar bir vaqt oralig\'ida funksiyani ishga tushirish\n\n```uzc\nsetInterval(() => {\n\tprint("Salom")\n}, 1000)\n```'
+                }
+              },
+              {
+                label: "length",
+                kind: monaco.languages.CompletionItemKind.Function,
+                insertText: 'length(${1:massiv})',
+                documentation: {
+                  value: '**length(massiv)**\n\nMassiv uzunligini qaytaradi\n\n```uzc\nlet sonlar = [1, 2, 3]\nprint(length(sonlar))  # 3\n```'
+                }
+              },
+              {
+                label: "round",
+                kind: monaco.languages.CompletionItemKind.Function,
+                insertText: 'round(${1:son}, ${2:kasrlar})',
+                documentation: {
+                  value: '**round(son, kasrlar)**\n\nSonni yaxlitlash\n\n```uzc\nprint(round(3.14159, 2))  # 3.14\n```'
+                }
+              },
+              {
+                label: "random",
+                kind: monaco.languages.CompletionItemKind.Function,
+                insertText: 'random(${1:min}, ${2:max})',
+                documentation: {
+                  value: '**random(min, max)**\n\nTasodifiy son generatsiya qilish\n\n```uzc\nprint(random(1, 10))  # 1 va 10 orasida tasodifiy son\n```'
+                }
+              }
             ];
 
             return { suggestions: suggestions };
-          },
+          }
         });
 
         // Create editor instance
@@ -475,6 +523,17 @@
             },
             tabSize: 4,
             wordWrap: "on",
+            quickSuggestions: {
+              other: true,
+              comments: false,
+              strings: true
+            },
+            suggest: {
+              preview: true,
+              showMethods: true,
+              showFunctions: true,
+              showConstructors: true
+            }
           }
         );
 
@@ -488,6 +547,18 @@
 
         // Add keyboard shortcut for F5 to run code
         editor.addCommand(monaco.KeyCode.F5, runCode);
+
+        // Har bir belgi kiritilganda yordam ko'rsatish
+        editor.onDidChangeModelContent(function(e) {
+          const position = editor.getPosition();
+          const lineContent = editor.getModel().getLineContent(position.lineNumber);
+          const textUntilPosition = lineContent.substr(0, position.column - 1);
+          
+          // Agar "p" yozilsa, "print" ni taklif qilish
+          if (textUntilPosition.endsWith('p')) {
+            editor.trigger('keyboard', 'editor.action.triggerSuggest', {});
+          }
+        });
       });
 
       // Run UZC code
@@ -499,68 +570,80 @@
           let jsCode = code
             .replace(/#(.*)/g, "//$1") // Convert comments
             .replace(/elif/g, "else if") // Convert elif
-            .replace(/\{(.+?)\}/g, "${$1}");
+            .replace(/\{(.+?)\}/g, "${$1}"); // String templates
+
           const func = new Function(`
-                      const output = [];
-
-                      // UZC built-in functions
-                      const print = (...args) => {
-                          output.push(args.join(' '));
-                      };
-
-                      const input = (promptText) => {
-                          return window.prompt(promptText) || '';
-                      };
-
-                      const type = (value) => {
-                          if (value === null) return 'null';
-                          if (Array.isArray(value)) return 'array';
-                          return typeof value;
-                      };
-
-                      const number = (value) => parseFloat(value);
-
-                      // Modified async functions to capture output
-                      const setTimeout = (fn, delay) => {
-                          return window.setTimeout(() => {
-                              try {
-                                  fn();
-                              } catch (e) {
-                                  output.push('Xato: ' + e.message);
-                              }
-                          }, delay);
-                      };
-
-                      const setInterval = (fn, interval) => {
-                          return window.setInterval(() => {
-                              try {
-                                  fn();
-                              } catch (e) {
-                                  output.push('Xato: ' + e.message);
-                              }
-                          }, interval);
-                      };
-
-                      try {
-                          ${jsCode}
-                      } catch (e) {
-                          output.push('Xato: ' + e.message);
-                      }
-
-                      return output.join('\\n');
-                  `);
+            const output = [];
+            
+            // UZC built-in functions
+            const print = (...args) => {
+              output.push(args.join(' '));
+            };
+            
+            const input = (promptText) => {
+              return window.prompt(promptText) || '';
+            };
+            
+            const type = (value) => {
+              if (value === null) return 'null';
+              if (Array.isArray(value)) return 'array';
+              return typeof value;
+            };
+            
+            const number = (value) => parseFloat(value);
+            
+            // Additional JavaScript functions
+            const length = (arr) => arr.length;
+            const round = (num, decimals = 0) => Number(Math.round(num + 'e' + decimals) + 'e-' + decimals);
+            const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+            
+            // Async functions
+            const setTimeout = (fn, delay) => {
+              return window.setTimeout(() => {
+                try {
+                  const result = fn();
+                  if (result !== undefined) output.push(result);
+                } catch (e) {
+                  output.push('Xato: ' + e.message);
+                }
+              }, delay);
+            };
+            
+            const setInterval = (fn, interval) => {
+              return window.setInterval(() => {
+                try {
+                  const result = fn();
+                  if (result !== undefined) output.push(result);
+                } catch (e) {
+                  output.push('Xato: ' + e.message);
+                }
+              }, interval);
+            };
+            
+            try {
+              ${jsCode}
+            } catch (e) {
+              output.push('Xato: ' + e.message);
+            }
+            
+            return output.join('\\n');
+          `);
+          
           const result = func();
           outputElement.innerHTML = result;
         } catch (e) {
           outputElement.innerHTML = `<span class="error">Tushunmaydigan xato: ${e.message}</span>`;
         }
       }
+
       function saveFile() {
         saveModal.style.display = "block";
       }
+
       function closeModal() {
         saveModal.style.display = "none";
       }
+
       function downloadCode() {
         const filename =
           document.getElementById("filename-input").value || "mycode.uzc";
@@ -581,12 +664,14 @@
           closeModal();
         }, 0);
       }
+
       document.addEventListener("keydown", function (e) {
         if (e.key === "F5") {
           e.preventDefault();
           runCode();
         }
       });
+
       window.onclick = function (event) {
         if (event.target == saveModal) {
           closeModal();
