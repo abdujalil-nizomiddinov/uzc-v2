@@ -496,82 +496,71 @@
         outputElement.innerHTML = "";
 
         try {
-          // Transpile UZC to JavaScript
           let jsCode = code
             .replace(/#(.*)/g, "//$1") // Convert comments
             .replace(/elif/g, "else if") // Convert elif
-            .replace(/\{(.+?)\}/g, "${$1}"); // Fix template literals
-
-          // Create execution environment
+            .replace(/\{(.+?)\}/g, "${$1}");
           const func = new Function(`
-                    const output = [];
-                    
-                    // UZC built-in functions
-                    const print = (...args) => {
-                        output.push(args.join(' '));
-                    };
-                    
-                    const input = (promptText) => {
-                        return window.prompt(promptText) || '';
-                    };
-                    
-                    const type = (value) => {
-                        if (value === null) return 'null';
-                        if (Array.isArray(value)) return 'array';
-                        return typeof value;
-                    };
-                    
-                    const number = (value) => parseFloat(value);
-                    
-                    // Modified async functions to capture output
-                    const setTimeout = (fn, delay) => {
-                        return window.setTimeout(() => {
-                            try {
-                                fn();
-                            } catch (e) {
-                                output.push('Xato: ' + e.message);
-                            }
-                        }, delay);
-                    };
-                    
-                    const setInterval = (fn, interval) => {
-                        return window.setInterval(() => {
-                            try {
-                                fn();
-                            } catch (e) {
-                                output.push('Xato: ' + e.message);
-                            }
-                        }, interval);
-                    };
-                    
-                    try {
-                        ${jsCode}
-                    } catch (e) {
-                        output.push('Xato: ' + e.message);
-                    }
-                    
-                    return output.join('\\n');
-                `);
+                      const output = [];
 
-          // Execute and display output
+                      // UZC built-in functions
+                      const print = (...args) => {
+                          output.push(args.join(' '));
+                      };
+
+                      const input = (promptText) => {
+                          return window.prompt(promptText) || '';
+                      };
+
+                      const type = (value) => {
+                          if (value === null) return 'null';
+                          if (Array.isArray(value)) return 'array';
+                          return typeof value;
+                      };
+
+                      const number = (value) => parseFloat(value);
+
+                      // Modified async functions to capture output
+                      const setTimeout = (fn, delay) => {
+                          return window.setTimeout(() => {
+                              try {
+                                  fn();
+                              } catch (e) {
+                                  output.push('Xato: ' + e.message);
+                              }
+                          }, delay);
+                      };
+
+                      const setInterval = (fn, interval) => {
+                          return window.setInterval(() => {
+                              try {
+                                  fn();
+                              } catch (e) {
+                                  output.push('Xato: ' + e.message);
+                              }
+                          }, interval);
+                      };
+
+                      try {
+                          ${jsCode}
+                      } catch (e) {
+                          output.push('Xato: ' + e.message);
+                      }
+
+                      return output.join('\\n');
+                  `);
           const result = func();
           outputElement.innerHTML = result;
         } catch (e) {
           outputElement.innerHTML = `<span class="error">Tushunmaydigan xato: ${e.message}</span>`;
         }
       }
-
-      // Show save modal
       function saveFile() {
         saveModal.style.display = "block";
       }
-
-      // Close modal
       function closeModal() {
         saveModal.style.display = "none";
       }
-
-      // Download code as file
       function downloadCode() {
         const filename =
           document.getElementById("filename-input").value || "mycode.uzc";
@@ -592,16 +581,12 @@
           closeModal();
         }, 0);
       }
-
-      // Handle keyboard shortcuts
       document.addEventListener("keydown", function (e) {
         if (e.key === "F5") {
           e.preventDefault();
           runCode();
         }
       });
-
-      // Close modal when clicking outside
       window.onclick = function (event) {
         if (event.target == saveModal) {
           closeModal();
