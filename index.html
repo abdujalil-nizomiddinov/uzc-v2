@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="uz">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UZCODE Dasturlash Tili</title>
     <link rel="icon" href="src/pic/Home.png" />
     <style>
+      :root {
+        --primary-color: #4ec9b0;
+        --primary-hover: #56d6bb;
+        --primary-active: #3db39e;
+        --text-glow: 0 0 10px rgba(78, 201, 176, 0.7);
+      }
+      
       html {
         cursor: url(src/pic/Mouse.png), auto;
       }
@@ -31,6 +38,14 @@
         font-weight: bold;
         border-bottom: 1px solid #1e1e1e;
       }
+      .header-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
       .section {
         background: #1e1e1e;
         padding: 20px;
@@ -52,22 +67,6 @@
         overflow-x: auto;
         font-family: "Courier New", monospace;
         border: 1px solid #333;
-      }
-      .copy-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: #0e639c;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 2px;
-        cursor: pointer;
-        font-size: 12px;
-        font-family: inherit;
-      }
-      .copy-btn:hover {
-        background: #1177bb;
       }
       .footer {
         text-align: center;
@@ -102,72 +101,202 @@
         color: #4ec9b0;
         border: 1px solid #333;
       }
+
+      /* UZCODE link style */
       #uzcode {
-        color: #4ec9b0;
+        color: var(--primary-color);
         font-weight: bold;
         text-decoration: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        background: rgba(78, 201, 176, 0.1);
+        border: 1px solid rgba(78, 201, 176, 0.3);
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: inline-block;
         position: relative;
-        padding: 0 2px;
-        transition: all 0.3s ease;
-      }
-
-      #uzcode::after {
-        content: "";
-        position: absolute;
-        left: 50%;
-        bottom: -2px;
-        transform: translateX(-50%);
-        width: 0;
-        height: 2px;
-        background-color: #007acc;
-        transition: width 0.3s ease, background-color 0.3s ease;
-        border-radius: 2px;
-      }
-
-      #uzcode:hover {
-        color: #007acc;
-        text-shadow: 0 0 8px rgba(0, 122, 204, 0.3);
-      }
-
-      #uzcode:hover::after {
-        width: 100%;
-        background-color: aqua;
+        overflow: hidden;
+        box-shadow: 0 2px 15px rgba(78, 201, 176, 0.1);
       }
 
       #uzcode::before {
-        content: "";
+        content: '';
         position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        transition: 0.5s;
+      }
+
+      #uzcode:hover {
+        background: rgba(78, 201, 176, 0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px rgba(78, 201, 176, 0.3);
+        color: #fff;
+        text-shadow: var(--text-glow);
+      }
+
+      #uzcode:hover::before {
+        left: 100%;
+      }
+
+      #uzcode:active {
+        transform: translateY(-1px);
+        background: rgba(78, 201, 176, 0.25);
+        box-shadow: 0 2px 10px rgba(78, 201, 176, 0.4);
+      }
+
+      /* Visitor counter style */
+      .visitor-counter {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        border-radius: 30px;
+        background: rgba(78, 201, 176, 0.1);
+        border: 1px solid rgba(78, 201, 176, 0.3);
+        font-size: 15px;
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 15px rgba(78, 201, 176, 0.1);
+        cursor: pointer;
+      }
+
+      .visitor-counter::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        transition: 0.5s;
+      }
+
+      .visitor-counter:hover {
+        background: rgba(78, 201, 176, 0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px rgba(78, 201, 176, 0.3);
+      }
+
+      .visitor-counter:hover::before {
+        left: 100%;
+      }
+
+      .visitor-counter:active {
+        transform: translateY(-1px);
+        background: rgba(78, 201, 176, 0.25);
+        box-shadow: 0 2px 10px rgba(78, 201, 176, 0.4);
+      }
+
+      .counter-icon {
+        font-size: 18px;
+        transition: all 0.3s ease;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .counter-number {
+        font-weight: bold;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .counter-number::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
         left: 0;
-        bottom: 0;
         width: 100%;
         height: 1px;
-        background-color: rgba(0, 122, 204, 0.2);
+        background: var(--primary-color);
         transform: scaleX(0);
         transform-origin: right;
         transition: transform 0.3s ease;
       }
 
-      #uzcode:hover::before {
+      .visitor-counter:hover .counter-number {
+        color: #fff;
+        text-shadow: var(--text-glow);
+      }
+
+      .visitor-counter:hover .counter-number::after {
         transform: scaleX(1);
         transform-origin: left;
       }
 
-      /* Pulse animation on hover */
-      @keyframes linkPulse {
-        0% {
-          box-shadow: 0 0 0 0 rgba(78, 201, 176, 0.4);
-        }
-        70% {
-          box-shadow: 0 0 0 6px rgba(78, 201, 176, 0);
-        }
-        100% {
-          box-shadow: 0 0 0 0 rgba(78, 201, 176, 0);
-        }
+      .counter-text {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
       }
 
-      #uzcode:hover {
-        animation: linkPulse 1.5s infinite;
+      .counter-text::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: var(--primary-color);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.3s ease;
       }
+
+      .visitor-counter:hover .counter-text {
+        letter-spacing: 0.5px;
+      }
+
+      .visitor-counter:hover .counter-text::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      /* Animations */
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+      }
+
+      @keyframes textGlow {
+        0%, 100% { text-shadow: 0 0 5px rgba(78, 201, 176, 0.5); }
+        50% { text-shadow: 0 0 15px rgba(78, 201, 176, 0.9); }
+      }
+
+      @keyframes slideIn {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
+      .visitor-counter.pulse {
+        animation: pulse 0.5s ease;
+      }
+
+      .visitor-counter.glow {
+        animation: textGlow 2s infinite;
+      }
+
+      /* Syntax highlighting */
       .keyword {
         color: #569cd6;
       }
@@ -184,6 +313,7 @@
         color: #b5cea8;
       }
 
+      /* Copy button styles */
       .copy-btn {
         position: absolute;
         top: 12px;
@@ -218,188 +348,82 @@
         box-shadow: 0 2px 5px rgba(14, 99, 156, 0.4);
       }
 
-      .copy-btn::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, 0.2),
-          transparent
-        );
-        transition: 0.5s;
-      }
-
-      .copy-btn:hover::before {
-        left: 100%;
-      }
-
       .copy-btn.copied {
         background: linear-gradient(135deg, #4ec9b0 0%, #56d6bb 100%);
-        animation: successPulse 0.8s, floatUp 0.4s forwards;
-        box-shadow: 0 5px 20px rgba(78, 201, 176, 0.5);
-      }
-
-      @keyframes successPulse {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.05);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-
-      @keyframes floatUp {
-        0% {
-          transform: translateY(0);
-        }
-        100% {
-          transform: translateY(-4px);
-        }
-      }
-
-      .copy-btn .icon {
-        display: inline-block;
-        transition: all 0.3s ease;
-        margin-right: 5px;
-      }
-
-      .copy-btn .checkmark {
-        display: none;
-        color: #fff;
-      }
-
-      .copy-btn.copied .icon {
-        transform: rotate(360deg);
-        opacity: 0;
-      }
-
-      .copy-btn.copied .checkmark {
-        display: inline-block;
-        animation: checkmarkPop 0.5s;
-      }
-
-      @keyframes checkmarkPop {
-        0% {
-          transform: scale(0);
-        }
-        50% {
-          transform: scale(1.2);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-
-      .copy-btn .particles {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        pointer-events: none;
-      }
-
-      .copy-btn .particle {
-        position: absolute;
-        background: white;
-        border-radius: 50%;
-        animation: particleFly 0.6s forwards;
-        opacity: 0;
-      }
-
-      @keyframes particleFly {
-        0% {
-          transform: translate(0, 0);
-          opacity: 1;
-          width: 2px;
-          height: 2px;
-        }
-        100% {
-          transform: translate(var(--tx), var(--ty));
-          opacity: 0;
-          width: 1px;
-          height: 1px;
-        }
+        animation: pulse 0.5s;
       }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <header>UZCODE(uzc) Dasturlash Tili</header>
     <div class="container">
-      <div class="section">
-        <h2>UZCODE(uzc) Tili Haqida</h2>
-        <p>
-          UZCODE(uzc) - bu yangi boshlovchilar uchun mo'ljallangan, JavaScript
-          asosidagi dasturlash tili. U o'zining oddiy va tushunarli sintaksisi,
-          o'zbek tilidagi izohlari va qulay imkoniyatlari bilan ajralib turadi.
-          <br /><br />
-          <a href="src/html/main.html" id="uzcode" target="_blank"
-            >Uzcode Compilerga o'tish</a
-          >
-        </p>
-      </div>
+        <div class="header-section">
+            <a href="src/html/main.html" id="uzcode" target="_blank">Uzcode Compilerga o'tish</a>
+            <div id="visitor-counter" class="visitor-counter">
+                <span class="counter-icon">👥</span>
+                <span class="counter-number">0</span>
+                <span class="counter-text">Visitors count</span>
+            </div>
+        </div>
 
-      <div class="section">
-        <h2>Asosiy Buyruqlar</h2>
-        <ul>
-          <li>
-            <span class="keyword">print</span>(...) - Ma'lumotni konsolga
-            chiqarish
-          </li>
-          <li>
-            <span class="keyword">let</span> - O'zgaruvchi e'lon qilish:
-            <code>let x = 5</code>
-          </li>
-          <li>
-            <span class="keyword">if</span> /
-            <span class="keyword">elif</span> /
-            <span class="keyword">else</span> - Shartli operatorlar
-          </li>
-          <li>
-            <span class="keyword">function</span> - Funksiya yaratish:
-            <code>function nomi(param) { ... }</code>
-          </li>
-          <li>
-            <span class="keyword">type</span>(...) - O'zgaruvchi turini
-            aniqlash:
-            <code>type(ozgaruvchi)</code>
-          </li>
-          <li>
-            <span class="keyword">list</span> - Ro'yxat yaratish:
-            <code>let royxat = [1, 2, 3]</code>
-          </li>
-          <li>
-            {...} - Matn ichida o'zgaruvchini chiqarish:
-            <code class="string">"Salom, {ism}"</code>
-          </li>
-          <li># - Izoh yozish uchun: <code class="comment"># Bu izoh</code></li>
-        </ul>
-      </div>
+        <div class="section">
+            <h2>UZCODE(uzc) Tili Haqida</h2>
+            <p>
+                UZCODE(uzc) - bu yangi boshlovchilar uchun mo'ljallangan, JavaScript
+                asosidagi dasturlash tili. U o'zining oddiy va tushunarli sintaksisi,
+                o'zbek tilidagi izohlari va qulay imkoniyatlari bilan ajralib turadi.
+            </p>
+        </div>
 
-      <div class="section">
-        <h2>Misollar</h2>
+        <div class="section">
+            <h2>Asosiy Buyruqlar</h2>
+            <ul>
+                <li>
+                    <span class="keyword">print</span>(...) - Ma'lumotni konsolga chiqarish
+                </li>
+                <li>
+                    <span class="keyword">let</span> - O'zgaruvchi e'lon qilish:
+                    <code>let x = 5</code>
+                </li>
+                <li>
+                    <span class="keyword">if</span> / <span class="keyword">elif</span> / <span class="keyword">else</span> - Shartli operatorlar
+                </li>
+                <li>
+                    <span class="keyword">function</span> - Funksiya yaratish:
+                    <code>function nomi(param) { ... }</code>
+                </li>
+                <li>
+                    <span class="keyword">type</span>(...) - O'zgaruvchi turini aniqlash:
+                    <code>type(ozgaruvchi)</code>
+                </li>
+                <li>
+                    <span class="keyword">list</span> - Ro'yxat yaratish:
+                    <code>let royxat = [1, 2, 3]</code>
+                </li>
+                <li>
+                    {...} - Matn ichida o'zgaruvchini chiqarish:
+                    <code class="string">"Salom, {ism}"</code>
+                </li>
+                <li># - Izoh yozish uchun: <code class="comment"># Bu izoh</code></li>
+            </ul>
+        </div>
 
-        <pre><code><span class="comment"># Konsolga chiqarish</span>
+        <div class="section">
+            <h2>Misollar</h2>
+
+            <pre><code><span class="comment"># Konsolga chiqarish</span>
 <span class="function">print</span>(<span class="string">"Salom, Dasturchi!"</span>)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-        <pre><code><span class="comment"># O'zgaruvchilar bilan ishlash</span>
+            <pre><code><span class="comment"># O'zgaruvchilar bilan ishlash</span>
 <span class="keyword">let</span> a = <span class="number">10</span>
 <span class="keyword">let</span> b = <span class="number">5</span>
 <span class="function">print</span>(<span class="string">"Yig'indi:"</span>, a + b)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-        <pre><code><span class="comment"># Ro'yxat bilan ishlash</span>
+            <pre><code><span class="comment"># Ro'yxat bilan ishlash</span>
 <span class="keyword">let</span> mevalar = [<span class="string">"Olma"</span>, <span class="string">"Banan"</span>, <span class="string">"Anor"</span>]
 <span class="function">print</span>(<span class="string">"Mevalar:"</span>, mevalar)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-        <pre><code><span class="comment"># Shartli operatorlar</span>
+            <pre><code><span class="comment"># Shartli operatorlar</span>
 <span class="keyword">let</span> yosh = <span class="number">20</span>
 <span class="keyword">if</span> yosh >= <span class="number">18</span> {
     <span class="function">print</span>(<span class="string">"Siz balog'at yoshidasiz"</span>)
@@ -409,61 +433,129 @@
     <span class="function">print</span>(<span class="string">"Siz bola ekansiz"</span>)
 }</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-        <pre><code><span class="comment"># Funksiya yaratish</span>
+            <pre><code><span class="comment"># Funksiya yaratish</span>
 <span class="keyword">function</span> <span class="function">salomBer</span>(ism) {
     <span class="function">print</span>(<span class="string">"Salom, {ism}"</span>)
 }
 <span class="function">salomBer</span>(<span class="string">"Jasur"</span>)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-        <pre><code><span class="comment"># Typeni aniqlash</span>
+            <pre><code><span class="comment"># Typeni aniqlash</span>
 <span class="keyword">let</span> son = <span class="number">5</span>
 <span class="function">print</span>(<span class="string">"Turi:"</span>, <span class="function">type</span>(son))</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-        <pre><code><span class="comment"># Matnli o'zgaruvchi bilan</span>
+            <pre><code><span class="comment"># Matnli o'zgaruvchi bilan</span>
 <span class="keyword">let</span> ism = <span class="string">"Ali"</span>
 <span class="function">print</span>(<span class="string">"Salom, {ism}"</span>)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-      </div>
+        </div>
     </div>
     <div class="footer">
-      © 2025 UZCODE(UZC) Dasturlash Tili. Barcha huquqlar himoyalangan.
+        © 2025 UZCODE(UZC) Dasturlash Tili. Barcha huquqlar himoyalangan.
     </div>
 
     <script>
-      function copyCode(button) {
-        const code = button.parentElement.querySelector("code").innerText;
-        navigator.clipboard.writeText(code).then(() => {
-          const originalText = button.innerText;
-          button.innerText = "Copied !!!";
-          button.style.background = "#4ec9b0";
-          setTimeout(() => {
-            button.innerText = originalText;
-            button.style.background = "#0e639c";
-          }, 2500);
-        });
-      }
+        // Format numbers (1000 -> 1K, 1000000 -> 1M)
+        function formatNumber(num) {
+            if (num >= 1000000000) {
+                return (num / 1000000000).toFixed(1) + 'B';
+            }
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            }
+            if (num >= 10000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
 
-      // Syntax highlighting for inline code
-      document.addEventListener("DOMContentLoaded", function () {
-        const inlineCodes = document.querySelectorAll("code:not(pre code)");
-        inlineCodes.forEach((code) => {
-          const text = code.textContent;
-          if (text.startsWith('"') || text.startsWith("'")) {
-            code.classList.add("string");
-          } else if (
-            text.startsWith("let") ||
-            text.startsWith("function") ||
-            text.startsWith("if") ||
-            text.startsWith("elif") ||
-            text.startsWith("else")
-          ) {
-            code.classList.add("keyword");
-          } else if (text.startsWith("print") || text.startsWith("type")) {
-            code.classList.add("function");
-          } else if (!isNaN(parseInt(text))) {
-            code.classList.add("number");
-          }
+        // Visitor counter with animations
+        function updateVisitorCounter() {
+            let count = localStorage.getItem('visitorCount');
+            
+            if (!count) {
+                count = 1;
+            } else {
+                count = parseInt(count) + 1;
+            }
+            
+            localStorage.setItem('visitorCount', count);
+            
+            const counterElement = document.querySelector('.counter-number');
+            const counterBox = document.getElementById('visitor-counter');
+            
+            // Add animations
+            counterBox.classList.add('pulse', 'glow');
+            
+            setTimeout(() => {
+                counterBox.classList.remove('pulse');
+            }, 500);
+            
+            // Increment animation
+            let current = parseInt(counterElement.textContent) || 0;
+            const target = count;
+            const increment = target > current ? 1 : -1;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                counterElement.textContent = formatNumber(current);
+                
+                if ((increment === 1 && current >= target) || 
+                    (increment === -1 && current <= target)) {
+                    clearInterval(timer);
+                    counterBox.classList.remove('glow');
+                }
+            }, 30);
+        }
+
+        // Copy code function
+        function copyCode(button) {
+            const code = button.parentElement.querySelector("code").innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                button.classList.add('copied');
+                button.innerText = "Copied!";
+                setTimeout(() => {
+                    button.classList.remove('copied');
+                    button.innerText = "Copy";
+                }, 2000);
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            // Syntax highlighting
+            const inlineCodes = document.querySelectorAll("code:not(pre code)");
+            inlineCodes.forEach((code) => {
+                const text = code.textContent;
+                if (text.startsWith('"') || text.startsWith("'")) {
+                    code.classList.add("string");
+                } else if (
+                    text.startsWith("let") ||
+                    text.startsWith("function") ||
+                    text.startsWith("if") ||
+                    text.startsWith("elif") ||
+                    text.startsWith("else")
+                ) {
+                    code.classList.add("keyword");
+                } else if (text.startsWith("print") || text.startsWith("type")) {
+                    code.classList.add("function");
+                } else if (!isNaN(parseInt(text))) {
+                    code.classList.add("number");
+                }
+            });
+
+            // Initialize visitor counter with entrance animation
+            const counterBox = document.getElementById('visitor-counter');
+            counterBox.style.opacity = '0';
+            counterBox.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                counterBox.style.transition = 'all 0.5s ease-out';
+                counterBox.style.opacity = '1';
+                counterBox.style.transform = 'translateY(0)';
+                
+                // Update counter after animation
+                setTimeout(updateVisitorCounter, 300);
+            }, 100);
         });
-      });
     </script>
-  </body>
+</body>
 </html>
