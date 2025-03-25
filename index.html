@@ -183,6 +183,152 @@
       .number {
         color: #b5cea8;
       }
+
+      .copy-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: linear-gradient(135deg, #0e639c 0%, #1177bb 100%);
+        color: white;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-family: "Courier New", monospace;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        outline: none;
+        z-index: 2;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(14, 99, 156, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .copy-btn:hover {
+        background: linear-gradient(135deg, #1177bb 0%, #1492e6 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(20, 146, 230, 0.4);
+      }
+
+      .copy-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 5px rgba(14, 99, 156, 0.4);
+      }
+
+      .copy-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: 0.5s;
+      }
+
+      .copy-btn:hover::before {
+        left: 100%;
+      }
+
+      .copy-btn.copied {
+        background: linear-gradient(135deg, #4ec9b0 0%, #56d6bb 100%);
+        animation: successPulse 0.8s, floatUp 0.4s forwards;
+        box-shadow: 0 5px 20px rgba(78, 201, 176, 0.5);
+      }
+
+      @keyframes successPulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes floatUp {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(-4px);
+        }
+      }
+
+      .copy-btn .icon {
+        display: inline-block;
+        transition: all 0.3s ease;
+        margin-right: 5px;
+      }
+
+      .copy-btn .checkmark {
+        display: none;
+        color: #fff;
+      }
+
+      .copy-btn.copied .icon {
+        transform: rotate(360deg);
+        opacity: 0;
+      }
+
+      .copy-btn.copied .checkmark {
+        display: inline-block;
+        animation: checkmarkPop 0.5s;
+      }
+
+      @keyframes checkmarkPop {
+        0% {
+          transform: scale(0);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .copy-btn .particles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+      }
+
+      .copy-btn .particle {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        animation: particleFly 0.6s forwards;
+        opacity: 0;
+      }
+
+      @keyframes particleFly {
+        0% {
+          transform: translate(0, 0);
+          opacity: 1;
+          width: 2px;
+          height: 2px;
+        }
+        100% {
+          transform: translate(var(--tx), var(--ty));
+          opacity: 0;
+          width: 1px;
+          height: 1px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -292,7 +438,7 @@
           setTimeout(() => {
             button.innerText = originalText;
             button.style.background = "#0e639c";
-          }, 2200);
+          }, 2500);
         });
       }
 
