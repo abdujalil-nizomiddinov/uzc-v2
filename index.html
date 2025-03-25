@@ -10,10 +10,12 @@
         cursor: url(src/pic/Mouse.png), auto;
       }
       body {
-        font-family: Arial, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #f5f5f5;
+        background-color: #252526;
+        color: #e0e0e0;
       }
       .container {
         max-width: 1000px;
@@ -21,79 +23,165 @@
         padding: 20px;
       }
       header {
-        background-color: #2c3e50;
+        background-color: #333333;
         color: white;
         padding: 20px;
         text-align: center;
         font-size: 24px;
         font-weight: bold;
+        border-bottom: 1px solid #1e1e1e;
       }
       .section {
-        background: white;
+        background: #1e1e1e;
         padding: 20px;
         margin-top: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         position: relative;
       }
       pre {
         position: relative;
+        margin: 15px 0;
       }
       pre code {
-        background: #2d2d2d;
-        color: #f8f8f2;
+        background: #252526;
+        color: #e0e0e0;
         display: block;
         padding: 15px;
         border-radius: 5px;
         overflow-x: auto;
         font-family: "Courier New", monospace;
+        border: 1px solid #333;
       }
       .copy-btn {
         position: absolute;
         top: 10px;
         right: 10px;
-        background: #3498db;
+        background: #0e639c;
         color: white;
         border: none;
         padding: 5px 10px;
-        border-radius: 5px;
+        border-radius: 2px;
         cursor: pointer;
         font-size: 12px;
+        font-family: inherit;
+      }
+      .copy-btn:hover {
+        background: #1177bb;
       }
       .footer {
         text-align: center;
-        padding: 10px;
-        margin-top: 20px;
-        background-color: #2c3e50;
+        padding: 15px;
+        margin-top: 30px;
+        background-color: #333333;
         color: white;
+        font-size: 14px;
+        border-top: 1px solid #1e1e1e;
+      }
+      ul {
+        padding-left: 20px;
       }
       ul li {
-        margin-bottom: 10px;
+        margin-bottom: 12px;
+        line-height: 1.5;
       }
       h2 {
-        color: #2c3e50;
+        color: #007acc;
+        margin-top: 0;
+        border-bottom: 1px solid #333;
+        padding-bottom: 10px;
+      }
+      p {
+        line-height: 1.6;
+      }
+      code:not(pre code) {
+        background: #252526;
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-family: "Courier New", monospace;
+        color: #4ec9b0;
+        border: 1px solid #333;
       }
       #uzcode {
-        color: rgb(0, 153, 255);
+        color: #4ec9b0;
         font-weight: bold;
         text-decoration: none;
         position: relative;
+        padding: 0 2px;
+        transition: all 0.3s ease;
       }
 
       #uzcode::after {
         content: "";
         position: absolute;
         left: 50%;
-        bottom: 0;
+        bottom: -2px;
         transform: translateX(-50%);
         width: 0;
         height: 2px;
-        background-color: rgb(0, 153, 255);
-        transition: width 0.4s ease;
+        background-color: #007acc;
+        transition: width 0.3s ease, background-color 0.3s ease;
+        border-radius: 2px;
+      }
+
+      #uzcode:hover {
+        color: #007acc;
+        text-shadow: 0 0 8px rgba(0, 122, 204, 0.3);
       }
 
       #uzcode:hover::after {
         width: 100%;
+        background-color: aqua;
+      }
+
+      #uzcode::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        background-color: rgba(0, 122, 204, 0.2);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.3s ease;
+      }
+
+      #uzcode:hover::before {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      /* Pulse animation on hover */
+      @keyframes linkPulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(78, 201, 176, 0.4);
+        }
+        70% {
+          box-shadow: 0 0 0 6px rgba(78, 201, 176, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(78, 201, 176, 0);
+        }
+      }
+
+      #uzcode:hover {
+        animation: linkPulse 1.5s infinite;
+      }
+      .keyword {
+        color: #569cd6;
+      }
+      .string {
+        color: #ce9178;
+      }
+      .comment {
+        color: #6a9955;
+      }
+      .function {
+        color: #dcdcaa;
+      }
+      .number {
+        color: #b5cea8;
       }
     </style>
   </head>
@@ -103,11 +191,12 @@
       <div class="section">
         <h2>UZCODE(uzc) Tili Haqida</h2>
         <p>
-          UZCODE(uzc) - bu juda oddiy, JavaScript buyruqlariga ega dasturlash
-          tili. U yangi boshlovchilar uchun qulay va o‘qilishi oson sintaksisga
-          ega.
+          UZCODE(uzc) - bu yangi boshlovchilar uchun mo'ljallangan, JavaScript
+          asosidagi dasturlash tili. U o'zining oddiy va tushunarli sintaksisi,
+          o'zbek tilidagi izohlari va qulay imkoniyatlari bilan ajralib turadi.
+          <br /><br />
           <a href="src/html/main.html" id="uzcode" target="_blank"
-            >Uzcode Compiler(ga) o'tish.</a
+            >Uzcode Compilerga o'tish</a
           >
         </p>
       </div>
@@ -115,72 +204,78 @@
       <div class="section">
         <h2>Asosiy Buyruqlar</h2>
         <ul>
-          <li><strong>print(...)</strong> - Ma'lumotni konsolga chiqarish</li>
           <li>
-            <strong>let</strong> - O‘zgaruvchi e'lon qilish:
+            <span class="keyword">print</span>(...) - Ma'lumotni konsolga
+            chiqarish
+          </li>
+          <li>
+            <span class="keyword">let</span> - O'zgaruvchi e'lon qilish:
             <code>let x = 5</code>
           </li>
-          <li><strong>if / elif / else</strong> - Shartli operatorlar</li>
           <li>
-            <strong>function</strong> - Funksiya yaratish:
+            <span class="keyword">if</span> /
+            <span class="keyword">elif</span> /
+            <span class="keyword">else</span> - Shartli operatorlar
+          </li>
+          <li>
+            <span class="keyword">function</span> - Funksiya yaratish:
             <code>function nomi(param) { ... }</code>
           </li>
           <li>
-            <strong>type(...)</strong> - O‘zgaruvchi turini aniqlash:
+            <span class="keyword">type</span>(...) - O'zgaruvchi turini
+            aniqlash:
             <code>type(ozgaruvchi)</code>
           </li>
           <li>
-            <strong>list</strong> - Ro‘yxat yaratish:
+            <span class="keyword">list</span> - Ro'yxat yaratish:
             <code>let royxat = [1, 2, 3]</code>
           </li>
           <li>
-            <strong>{...}</strong> - Matn ichida o‘zgaruvchini chiqarish:
-            <code>"Salom, {ism}"</code>
+            {...} - Matn ichida o'zgaruvchini chiqarish:
+            <code class="string">"Salom, {ism}"</code>
           </li>
-          <li>
-            <strong>#</strong> - Izoh yozish uchun: <code># Bu izoh</code>
-          </li>
+          <li># - Izoh yozish uchun: <code class="comment"># Bu izoh</code></li>
         </ul>
       </div>
 
       <div class="section">
         <h2>Misollar</h2>
 
-        <pre><code># Konsolga chiqarish
-print("Salom, Dasturchi!")</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        <pre><code><span class="comment"># Konsolga chiqarish</span>
+<span class="function">print</span>(<span class="string">"Salom, Dasturchi!"</span>)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-        <pre><code># O‘zgaruvchilar bilan ishlash
-let a = 10
-let b = 5
-print("Yig‘indi:", a + b)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        <pre><code><span class="comment"># O'zgaruvchilar bilan ishlash</span>
+<span class="keyword">let</span> a = <span class="number">10</span>
+<span class="keyword">let</span> b = <span class="number">5</span>
+<span class="function">print</span>(<span class="string">"Yig'indi:"</span>, a + b)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-        <pre><code># Ro‘yxat bilan ishlash
-let mevalar = ["Olma", "Banan", "Anor"]
-print("Mevalar:", mevalar)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        <pre><code><span class="comment"># Ro'yxat bilan ishlash</span>
+<span class="keyword">let</span> mevalar = [<span class="string">"Olma"</span>, <span class="string">"Banan"</span>, <span class="string">"Anor"</span>]
+<span class="function">print</span>(<span class="string">"Mevalar:"</span>, mevalar)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-        <pre><code># Shartli operatorlar
-let yosh = 20
-if yosh >= 18 {
-    print("Siz balog‘at yoshidasiz")
-} elif yosh >= 13 {
-    print("Siz o‘smirsiz")
-} else {
-    print("Siz bola ekansiz")
+        <pre><code><span class="comment"># Shartli operatorlar</span>
+<span class="keyword">let</span> yosh = <span class="number">20</span>
+<span class="keyword">if</span> yosh >= <span class="number">18</span> {
+    <span class="function">print</span>(<span class="string">"Siz balog'at yoshidasiz"</span>)
+} <span class="keyword">elif</span> yosh >= <span class="number">13</span> {
+    <span class="function">print</span>(<span class="string">"Siz o'smirsiz"</span>)
+} <span class="keyword">else</span> {
+    <span class="function">print</span>(<span class="string">"Siz bola ekansiz"</span>)
 }</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-        <pre><code># Funksiya yaratish
-function salomBer(ism) {
-    print("Salom, {ism}")
+        <pre><code><span class="comment"># Funksiya yaratish</span>
+<span class="keyword">function</span> <span class="function">salomBer</span>(ism) {
+    <span class="function">print</span>(<span class="string">"Salom, {ism}"</span>)
 }
-salomBer("Jasur")</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+<span class="function">salomBer</span>(<span class="string">"Jasur"</span>)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-        <pre><code># Typeni aniqlash
-let son = 5
-print("Turi:", type(son))</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        <pre><code><span class="comment"># Typeni aniqlash</span>
+<span class="keyword">let</span> son = <span class="number">5</span>
+<span class="function">print</span>(<span class="string">"Turi:"</span>, <span class="function">type</span>(son))</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-        <pre><code># Matnli o‘zgaruvchi bilan
-let ism = "Ali"
-print("Salom, {ism}")</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        <pre><code><span class="comment"># Matnli o'zgaruvchi bilan</span>
+<span class="keyword">let</span> ism = <span class="string">"Ali"</span>
+<span class="function">print</span>(<span class="string">"Salom, {ism}"</span>)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
       </div>
     </div>
     <div class="footer">
@@ -191,10 +286,38 @@ print("Salom, {ism}")</code><button class="copy-btn" onclick="copyCode(this)">Co
       function copyCode(button) {
         const code = button.parentElement.querySelector("code").innerText;
         navigator.clipboard.writeText(code).then(() => {
+          const originalText = button.innerText;
           button.innerText = "Copied !!!";
-          setTimeout(() => (button.innerText = "Copy"), 2500);
+          button.style.background = "#4ec9b0";
+          setTimeout(() => {
+            button.innerText = originalText;
+            button.style.background = "#0e639c";
+          }, 2200);
         });
       }
+
+      // Syntax highlighting for inline code
+      document.addEventListener("DOMContentLoaded", function () {
+        const inlineCodes = document.querySelectorAll("code:not(pre code)");
+        inlineCodes.forEach((code) => {
+          const text = code.textContent;
+          if (text.startsWith('"') || text.startsWith("'")) {
+            code.classList.add("string");
+          } else if (
+            text.startsWith("let") ||
+            text.startsWith("function") ||
+            text.startsWith("if") ||
+            text.startsWith("elif") ||
+            text.startsWith("else")
+          ) {
+            code.classList.add("keyword");
+          } else if (text.startsWith("print") || text.startsWith("type")) {
+            code.classList.add("function");
+          } else if (!isNaN(parseInt(text))) {
+            code.classList.add("number");
+          }
+        });
+      });
     </script>
   </body>
 </html>
